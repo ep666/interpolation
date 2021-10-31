@@ -27,9 +27,9 @@ void Linear::paintEvent(QPaintEvent* e)
 
     int dataSize = m_Data.size() - 1;
 
-    int64_t gridStep = 40;
+    int gridStep = 40;
     int interpolationStep = 2;
-    int64_t x = 0;
+    int x = 0;
     double prevY;
 
     for (int i = 0; i < dataSize; ++i)
@@ -80,9 +80,9 @@ void Quadratic::paintEvent(QPaintEvent* e)
 
     int dataSize = m_Data.size() - 1;
 
-    int64_t gridStep = 40;
+    int gridStep = 40;
     int interpolationStep = 2;
-    int64_t x = 0;
+    int x = 0;
     double prevY;
 
 
@@ -94,10 +94,10 @@ void Quadratic::paintEvent(QPaintEvent* e)
         {
             for (int j = interpolationStep; j <= 2*gridStep; j += interpolationStep)
             {
-                int64_t curX = x + j;
-                int64_t x1 = x;
-                int64_t x2 = x+gridStep;
-                int64_t x3 = x+2*gridStep;
+                int curX = x + j;
+                int x1 = x;
+                int x2 = x+gridStep;
+                int x3 = x+2*gridStep;
 
                 double curY = m_Data[i] * ((curX - x2) * (curX - x3)) / ((x1 - x2) * (x1 - x3)) +
                           m_Data[i + 1] * ((curX - x1) * (curX - x3)) / ((x2 - x1) * (x2 - x3)) +
@@ -115,7 +115,7 @@ void Quadratic::paintEvent(QPaintEvent* e)
         {
             for (int j = interpolationStep; j <= gridStep; j += interpolationStep)
             {
-                int64_t curX = x + j;
+                int curX = x + j;
 
                 double curY = m_Data[i] + ((m_Data[i + 1] - m_Data[i]) / (x + gridStep - x)) * (curX - x);
                 curY *= -1;
@@ -167,8 +167,6 @@ void Cubic::paintEvent(QPaintEvent* e)
         x[i] = x[i - 1] + gridStep;
     }
 
-    QVector<double> b(n);
-    QVector<double> d(n);
     QVector<double> h(n);
 
     for (int i = 0; i < n; ++i)
@@ -199,6 +197,9 @@ void Cubic::paintEvent(QPaintEvent* e)
 
     l[n] = 1; z[n] = 0; c[n] = 0;
 
+    QVector<double> b(n);
+    QVector<double> d(n);
+
     for (int i = n - 1; i >= 0; --i)
     {
         c[i] = z[i] - mu[i] * c[i + 1];
@@ -217,9 +218,9 @@ void Cubic::paintEvent(QPaintEvent* e)
         double prevY = -m_Data[i];
         for (int j = interpolationStep; j <= gridStep; j += interpolationStep)
         {
-            int64_t curX = x[i] + j;
+            int curX = x[i] + j;
 
-            double curY = d[i] * pow((curX - x[i]), 3) + c[i] * pow((curX - x[i]), 2) + b[i] * (curX - x[i]) + a[i];
+            double curY = a[i] + b[i] * (curX - x[i]) + c[i] * pow((curX - x[i]), 2) + d[i] * pow((curX - x[i]), 3);
             curY *= -1;
 
             painter.drawLine(curX - interpolationStep, prevY, curX, curY);
