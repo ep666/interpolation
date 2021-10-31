@@ -4,7 +4,7 @@
 
 int main(int argc, char *argv[])
 {
-    QFile table("D:\\Alex\\data.txt");
+    QFile table("data.txt");
 
     if (!table.open(QIODevice::ReadOnly)) {
         qWarning("Cannot open file for reading");
